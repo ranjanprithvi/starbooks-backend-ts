@@ -1,0 +1,7 @@
+{
+    "name": "starbooks-backend",
+    "JWTPrivateKey": "",
+    "commented_db": "mongodb://127.0.0.1/starbooksDB",
+    "db_name": "starbooksDB",
+    "authEnabled": true
+}

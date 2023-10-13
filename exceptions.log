@@ -1,0 +1,6 @@
+2022-10-10T21:47:45.032Z [Starbooks] error: uncaughtException: Pretty
+Error: Pretty
+    at file:///Users/ranjanprabhu/Projects/starbooks-backend/index.js:12:7
+    at ModuleJob.run (internal/modules/esm/module_job.js:170:25)
+    at async Loader.import (internal/modules/esm/loader.js:178:24)
+    at async Object.loadESM (internal/process/esm_loader.js:68:5)

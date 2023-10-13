@@ -1,0 +1,6 @@
+{
+    "name": "starbooks-backend",
+    "JWTPrivateKey": "1234",
+    "MongodbURI": "mongodb://127.0.0.1/starbooksDB_test",
+    "authEnabled": true
+}

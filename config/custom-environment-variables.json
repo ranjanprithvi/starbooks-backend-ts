@@ -1,0 +1,7 @@
+{
+    "mail": {
+        "password": "sb_password"
+    },
+    "JWTPrivateKey": "starbooks_JWTPrivateKey",
+    "MongodbURI": "MongodbURI"
+}
