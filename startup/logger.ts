@@ -22,11 +22,11 @@ export const logger = createLogger({
         // }),
     ],
     exceptionHandlers: [
-        new transports.Console({ colorize: true, prettyPrint: true }),
+        new transports.Console(),
         new transports.File({ filename: "./logs/exceptions.log" }),
     ],
     rejectionHandlers: [
-        new transports.Console({ colorize: true, prettyPrint: true }),
+        new transports.Console(),
         new transports.File({ filename: "./logs/rejections.log" }),
     ],
 });

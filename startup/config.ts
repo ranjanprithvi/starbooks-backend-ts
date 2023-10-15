@@ -4,9 +4,9 @@ export default function checkConfigVariables() {
     if (!config.get("JWTPrivateKey")) {
         throw new Error("FATAL ERROR.. Private Key is not set");
     }
-    // if (!config.get("MongoPassword")) {
-    //     throw new Error("FATAL ERROR.. MongoDB password is not set");
-    // }
+    if (!config.get("MongodbURI")) {
+        throw new Error("FATAL ERROR.. MongoDB password is not set");
+    }
 }
 
 // console.log("app name:" + config.get("name"));

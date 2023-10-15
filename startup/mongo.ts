@@ -2,17 +2,14 @@ import mongoose from "mongoose";
 import config from "config";
 import { logger } from "./logger.js";
 
-let connectionString;
+let connectionString: string;
 
 connectionString = config.get("MongodbURI");
 
 export default function initialiseDb() {
     mongoose.set("strictQuery", false);
     mongoose
-        .connect(connectionString, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        })
+        .connect(connectionString)
         .then(() => logger.info(`Connected to ${connectionString}..`))
         .catch((err) => logger.error(err));
 }

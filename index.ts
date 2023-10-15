@@ -1,9 +1,9 @@
-import express from "express";
+import express, { Express, Request, Response } from "express";
 import checkConfigVariables from "./startup/config.js";
 import { logger } from "./startup/logger.js";
 import initialiseDb from "./startup/mongo.js";
 import initialiseRoutes from "./startup/routes.js";
-const app = express();
+const app: Express = express();
 
 initialiseDb();
 initialiseRoutes(app);
@@ -13,5 +13,9 @@ const port = process.env.PORT || 3000;
 const server = app.listen(port, () =>
     logger.info(`Listening on port ${port}..`)
 );
+
+app.get("/", (req: Request, res: Response) => {
+    res.send("Starbooks backend is running!");
+});
 
 export default server;
