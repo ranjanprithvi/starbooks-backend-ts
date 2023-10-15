@@ -10,6 +10,6 @@ checkConfigVariables();
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => logger.info(`Listening on port ${port}..`));
 app.get("/", (req, res) => {
-    res.send("Starbooks backend is running!");
+    res.send("Starbooks backend is running! Woo");
 });
 export default server;

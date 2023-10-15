@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 import request from "supertest";
-import server from "../../index";
-import { logger } from "../../startup/logger";
-import { conn } from "../../startup/mongo";
-import { Genre } from "../../models/genreModel";
-import { User } from "../../models/userModel";
-import { Book } from "../../models/bookModel";
+import server from "../../dist/index";
+import { logger } from "../../dist/startup/logger";
+import { conn } from "../../dist/startup/mongo";
+import { Genre } from "../../dist/models/genreModel";
+import { User } from "../../dist/models/userModel";
+import { Book } from "../../dist/models/bookModel";
 
 describe("/api/genres", () => {
     // beforeEach(() => {

@@ -8,7 +8,6 @@ describe("auth middleware", () => {
         const user = {
             _id: mongoose.Types.ObjectId(),
             isAdmin: true,
-            membershipExpiry: moment().add(1, "day").toISOString(),
         };
         const token = new User(user).generateAuthToken();
         const req = {

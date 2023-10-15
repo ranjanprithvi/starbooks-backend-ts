@@ -14,14 +14,13 @@ import { authSchemaObject } from "../models/authModel.js";
 import { validateBody } from "../middleware/validate.js";
 const router = express.Router();
 router.post("/login", validateBody(authSchemaObject), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield User.findOne({ email: req.body.email });
-    console.log(1);
+    const user = yield User.findOne({ email: req.body.email }).select("+password");
     if (!user)
         return res.status(400).send("Invalid Email or password");
     const validPassword = yield bcrypt.compare(req.body.password, user.password);
     if (!validPassword)
         return res.status(400).send("Invalid Email or password");
-    const token = "user.generateAuthToken();";
+    const token = user.generateAuthToken();
     res.send({ token, isAdmin: user.isAdmin });
 }));
 export default router;

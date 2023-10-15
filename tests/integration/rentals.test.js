@@ -1,12 +1,12 @@
 import mongoose, { Types, mongo } from "mongoose";
 import request from "supertest";
-import server from "../../index";
-import { logger } from "../../startup/logger";
-import { conn } from "../../startup/mongo";
-import { Rental } from "../../models/rentalModel";
-import { User } from "../../models/userModel";
+import server from "../../dist/index";
+import { logger } from "../../dist/startup/logger";
+import { conn } from "../../dist/startup/mongo";
+import { Rental } from "../../dist/models/rentalModel";
+import { User } from "../../dist/models/userModel";
 import moment from "moment";
-import { Book } from "../../models/bookModel";
+import { Book } from "../../dist/models/bookModel";
 
 describe("/api/rentals", () => {
     let token;

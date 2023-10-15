@@ -62,23 +62,18 @@ const dbSchema = new Schema({
         type: [{ type: Types.ObjectId, ref: "rental" }],
         default: [],
     },
-});
-dbSchema.method("generateAuthToken", function () {
-    const token = jwt.sign({
-        _id: this._id,
-        name: this.name,
-        email: this.email,
-        isAdmin: this.isAdmin,
-        maxBorrow: this.maxBorrow,
-        activeRentals: this.activeRentals,
-        countryCode: this.countryCode,
-        phoneNumber: this.phoneNumber,
-        dateOfBirth: this.dateOfBirth,
-        membershipExpiry: this.membershipExpiry,
-    }, config.get("JWTPrivateKey")
-    // ,{ expiresIn: "24h" }
-    );
-    return token;
+}, {
+    methods: {
+        generateAuthToken() {
+            const token = jwt.sign({
+                _id: this._id,
+                isAdmin: this.isAdmin,
+            }, config.get("JWTPrivateKey")
+            // ,{ expiresIn: "24h" }
+            );
+            return token;
+        },
+    },
 });
 export const User = model("user", dbSchema);
 // const Phone = model(

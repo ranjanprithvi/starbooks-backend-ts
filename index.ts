@@ -15,7 +15,7 @@ const server = app.listen(port, () =>
 );
 
 app.get("/", (req: Request, res: Response) => {
-    res.send("Starbooks backend is running!");
+    res.send("Starbooks backend is running! Woo");
 });
 
 export default server;

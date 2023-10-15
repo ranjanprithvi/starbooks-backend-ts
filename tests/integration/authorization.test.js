@@ -1,14 +1,15 @@
 import request from "supertest";
-import server from "../../index";
-import { conn } from "../../startup/mongo";
-import { logger } from "../../startup/logger";
-import { Genre } from "../../models/genreModel";
-import { User } from "../../models/userModel";
+import server from "../../dist/index";
+import { conn } from "../../dist/startup/mongo";
+import { logger } from "../../dist/startup/logger";
+import { Genre } from "../../dist/models/genreModel";
+import { User } from "../../dist/models/userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "config";
 import moment from "moment";
 import { Types } from "mongoose";
+import { log } from "console";
 
 describe("auth", () => {
     afterAll(() => {
@@ -110,7 +111,7 @@ describe("auth", () => {
             expect(response.status).toBe(400);
         });
 
-        it.only("should return valid token if credentials are valid", async () => {
+        it("should return valid token if credentials are valid", async () => {
             const response = await exec();
 
             expect(response.status).toBe(200);
@@ -119,8 +120,6 @@ describe("auth", () => {
                 config.get("JWTPrivateKey")
             );
             expect(data).toHaveProperty("_id");
-            expect(data).toHaveProperty("name", "user1");
-            expect(data).toHaveProperty("email", "abc@abc.com");
             expect(data).toHaveProperty("isAdmin", false);
         });
     });

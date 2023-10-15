@@ -1,12 +1,12 @@
 import mongoose, { Types } from "mongoose";
 import request from "supertest";
-import server from "../../index";
-import { logger } from "../../startup/logger";
-import { conn } from "../../startup/mongo";
-import { Book } from "../../models/bookModel";
-import { User } from "../../models/userModel";
-import { Genre } from "../../models/genreModel";
-import { Author } from "../../models/authorModel";
+import server from "../../dist/index";
+import { logger } from "../../dist/startup/logger";
+import { conn } from "../../dist/startup/mongo";
+import { Book } from "../../dist/models/bookModel";
+import { User } from "../../dist/models/userModel";
+import { Genre } from "../../dist/models/genreModel";
+import { Author } from "../../dist/models/authorModel";
 
 describe("/api/books", () => {
     afterEach(async () => {
@@ -77,11 +77,11 @@ describe("/api/books", () => {
             expect(response.status).toBe(200);
             expect(response.body).toHaveProperty("title", "book1");
             expect(response.body).toHaveProperty(
-                "genre",
+                "genre._id",
                 genre1._id.toHexString()
             );
             expect(response.body).toHaveProperty(
-                "author",
+                "author._id",
                 author1._id.toHexString()
             );
         });

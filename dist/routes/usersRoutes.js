@@ -74,8 +74,8 @@ router.post("/", [auth, admin, validateBody(Joi.object(_.omit(userSchema, "passw
         return res.status(400).send("User already registered.");
     req.body.password = generatePass();
     const salt = yield bcrypt.genSalt(10);
-    const password = yield bcrypt.hash(req.body.password, salt);
-    user = new User(Object.assign(Object.assign({}, req.body), { password, isAdmin: false }));
+    const hash = yield bcrypt.hash(req.body.password, salt);
+    user = new User(Object.assign(Object.assign({}, req.body), { password: hash, isAdmin: false }));
     try {
         yield user.save();
     }

@@ -4,6 +4,7 @@ import _ from "lodash";
 import { Schema, Types, model } from "mongoose";
 import jwt from "jsonwebtoken";
 import config from "config";
+import { log } from "console";
 
 // const complexityOptions: ComplexityOptions = {
 //     min: 5,
@@ -48,63 +49,60 @@ interface IUser {
     generateAuthToken: () => string;
 }
 
-const dbSchema = new Schema({
-    email: {
-        type: String,
-        min: 5,
-        max: 255,
-        index: true,
-        unique: true,
-        sparse: true,
-    },
-    password: { type: String, required: true, select: false },
-    name: { type: String, minLength: 3, maxLength: 50, required: true },
-    isAdmin: { type: Boolean, default: false },
-    countryCode: { type: String, maxLength: 3, default: "49" },
-    phoneNumber: {
-        type: String,
-        maxLength: 11,
-        index: true,
-    },
-    dateOfBirth: { type: Date, max: new Date() },
-    // isMember: { type: Boolean, default: false },
-    membershipExpiry: {
-        type: Date,
-        required: function (this: IUser) {
-            return !this.isAdmin;
+const dbSchema = new Schema<IUser>(
+    {
+        email: {
+            type: String,
+            min: 5,
+            max: 255,
+            index: true,
+            unique: true,
+            sparse: true,
+        },
+        password: { type: String, required: true, select: false },
+        name: { type: String, minLength: 3, maxLength: 50, required: true },
+        isAdmin: { type: Boolean, default: false },
+        countryCode: { type: String, maxLength: 3, default: "49" },
+        phoneNumber: {
+            type: String,
+            maxLength: 11,
+            index: true,
+        },
+        dateOfBirth: { type: Date, max: new Date() },
+        // isMember: { type: Boolean, default: false },
+        membershipExpiry: {
+            type: Date,
+            required: function (this: IUser) {
+                return !this.isAdmin;
+            },
+        },
+        maxBorrow: {
+            type: Number,
+            min: 1,
+            max: 5,
+            default: 1,
+        },
+        activeRentals: {
+            type: [{ type: Types.ObjectId, ref: "rental" }],
+            default: [],
         },
     },
-    maxBorrow: {
-        type: Number,
-        min: 1,
-        max: 5,
-        default: 1,
-    },
-    activeRentals: {
-        type: [{ type: Types.ObjectId, ref: "rental" }],
-        default: [],
-    },
-});
-
-dbSchema.method("generateAuthToken", function (): string {
-    const token: string = jwt.sign(
-        {
-            _id: this._id,
-            name: this.name,
-            email: this.email,
-            isAdmin: this.isAdmin,
-            maxBorrow: this.maxBorrow,
-            activeRentals: this.activeRentals,
-            countryCode: this.countryCode,
-            phoneNumber: this.phoneNumber,
-            dateOfBirth: this.dateOfBirth,
-            membershipExpiry: this.membershipExpiry,
+    {
+        methods: {
+            generateAuthToken(): string {
+                const token: string = jwt.sign(
+                    {
+                        _id: this._id,
+                        isAdmin: this.isAdmin,
+                    },
+                    config.get("JWTPrivateKey")
+                    // ,{ expiresIn: "24h" }
+                );
+                return token;
+            },
         },
-        config.get("JWTPrivateKey")
-        // ,{ expiresIn: "24h" }
-    );
-    return token;
-});
+    }
+);
 
 export const User = model<IUser>("user", dbSchema);
 

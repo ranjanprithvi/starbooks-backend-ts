@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import request from "supertest";
-import server from "../../index";
-import { logger } from "../../startup/logger";
-import { conn } from "../../startup/mongo";
-import { User } from "../../models/userModel";
+import server from "../../dist/index";
+import { logger } from "../../dist/startup/logger";
+import { conn } from "../../dist/startup/mongo";
+import { User } from "../../dist/models/userModel";
 import bcrypt from "bcrypt";
 import moment from "moment";
 

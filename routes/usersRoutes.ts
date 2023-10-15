@@ -80,10 +80,10 @@ router.post(
         req.body.password = generatePass();
 
         const salt = await bcrypt.genSalt(10);
-        const password = await bcrypt.hash(req.body.password, salt);
+        const hash = await bcrypt.hash(req.body.password, salt);
         user = new User({
             ...req.body,
-            password,
+            password: hash,
             isAdmin: false,
         });
 
