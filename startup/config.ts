@@ -1,6 +1,6 @@
 import config from "config";
 
-export default function checkConfigVariables() {
+export default function checkConfigVariables(): void {
     if (!config.get("JWTPrivateKey")) {
         throw new Error("FATAL ERROR.. Private Key is not set");
     }

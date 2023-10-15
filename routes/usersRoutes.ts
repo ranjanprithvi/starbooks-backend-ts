@@ -10,9 +10,10 @@ import { validateBody, validateEachParameter } from "../middleware/validate.js";
 import Joi from "joi";
 import { Book } from "../models/bookModel.js";
 import { generatePass } from "../util/generatePassword.js";
+import { Request, Response } from "express";
 const router = express.Router();
 
-router.get("/me", auth, async (req, res) => {
+router.get("/me", auth, async (req: Request, res: Response) => {
     const user = await User.findById(req.user._id)
         .populate("activeRentals")
         .populate({
@@ -28,7 +29,7 @@ router.get("/me", auth, async (req, res) => {
     res.send(user);
 });
 
-router.get("/", [auth, admin], async (req, res) => {
+router.get("/", [auth, admin], async (req: Request, res: Response) => {
     if (req.query.search) {
         req.query.name = { $regex: req.query.search, $options: "i" };
     }
@@ -37,7 +38,7 @@ router.get("/", [auth, admin], async (req, res) => {
     let sortBy = "-_id";
 
     if (req.query.sortBy) {
-        sortBy = req.query.sortBy;
+        sortBy = req.query.sortBy.toString();
     }
     delete req.query.sortBy;
 
@@ -53,7 +54,7 @@ router.get("/", [auth, admin], async (req, res) => {
     res.send(users);
 });
 
-router.get("/:id", [auth, admin], async (req, res) => {
+router.get("/:id", [auth, admin], async (req: Request, res: Response) => {
     const user = await User.findById(req.params.id)
         .populate("activeRentals")
         .populate({
@@ -72,7 +73,7 @@ router.get("/:id", [auth, admin], async (req, res) => {
 router.post(
     "/",
     [auth, admin, validateBody(Joi.object(_.omit(userSchema, "password")))],
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         let user = await User.findOne({ email: req.body.email });
         if (user) return res.status(400).send("User already registered.");
 
@@ -88,7 +89,7 @@ router.post(
 
         try {
             await user.save();
-        } catch (ex) {
+        } catch (ex: any) {
             for (let field in ex.errors) console.log(ex.errors[field].message);
         }
         const token = user.generateAuthToken();
@@ -108,7 +109,7 @@ router.post(
             Joi.object(_.pick(userSchema, ["email", "password", "name"]))
         ),
     ],
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         let user = await User.findOne({ email: req.body.email });
         if (user) return res.status(400).send("User already registered.");
 
@@ -122,7 +123,7 @@ router.post(
 
         try {
             await user.save();
-        } catch (ex) {
+        } catch (ex: any) {
             for (let field in ex.errors) console.log(ex.errors[field].message);
         }
         const token = user.generateAuthToken();
@@ -151,7 +152,7 @@ router.patch(
             ])
         ),
     ],
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         if (req.body.email) {
             const user = await User.findOne({ email: req.body.email });
             // console.log(user);
@@ -175,13 +176,17 @@ router.patch(
     }
 );
 
-router.delete("/:id", [validateObjectId, auth, admin], async (req, res) => {
-    const user = await User.findByIdAndDelete(req.params.id).select(
-        "-password"
-    );
-    if (!user) return res.status(404).send("Resource not found");
+router.delete(
+    "/:id",
+    [validateObjectId, auth, admin],
+    async (req: Request, res: Response) => {
+        const user = await User.findByIdAndDelete(req.params.id).select(
+            "-password"
+        );
+        if (!user) return res.status(404).send("Resource not found");
 
-    res.send(user);
-});
+        res.send(user);
+    }
+);
 
 export default router;

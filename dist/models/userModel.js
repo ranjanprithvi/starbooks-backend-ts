@@ -1,10 +1,7 @@
 import Joi from "joi";
-// import passwordComplexity, { ComplexityOptions } from "joi-password-complexity";
-import _ from "lodash";
 import { Schema, Types, model } from "mongoose";
 import jwt from "jsonwebtoken";
 import config from "config";
-
 // const complexityOptions: ComplexityOptions = {
 //     min: 5,
 //     max: 1024,
@@ -14,15 +11,12 @@ import config from "config";
 //     symbol: 1,
 //     requirementCount: 4,
 // };
-
 export const userSchema = {
     name: Joi.string().min(3).max(50).required(),
     email: Joi.string().email().min(5).max(255).required(),
     // password: passwordComplexity(complexityOptions).required(),
     password: Joi.string()
-        .regex(
-            /(?=^.{5,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/
-        )
+        .regex(/(?=^.{5,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/)
         .required(),
     isAdmin: Joi.boolean(),
     countryCode: Joi.string().max(3).regex(/^\d+$/).allow(""),
@@ -32,22 +26,6 @@ export const userSchema = {
     maxBorrow: Joi.number().min(1).max(5),
 };
 export const userSchemaObject = Joi.object(userSchema);
-
-interface IUser {
-    _id: string;
-    email: string;
-    password: string;
-    name: string;
-    isAdmin: boolean;
-    countryCode: string;
-    phoneNumber: string;
-    dateOfBirth: Date;
-    membershipExpiry: Date;
-    maxBorrow: number;
-    activeRentals: Types.ObjectId[];
-    generateAuthToken: () => string;
-}
-
 const dbSchema = new Schema({
     email: {
         type: String,
@@ -70,7 +48,7 @@ const dbSchema = new Schema({
     // isMember: { type: Boolean, default: false },
     membershipExpiry: {
         type: Date,
-        required: function (this: IUser) {
+        required: function () {
             return !this.isAdmin;
         },
     },
@@ -85,29 +63,24 @@ const dbSchema = new Schema({
         default: [],
     },
 });
-
-dbSchema.method("generateAuthToken", function (): string {
-    const token: string = jwt.sign(
-        {
-            _id: this._id,
-            name: this.name,
-            email: this.email,
-            isAdmin: this.isAdmin,
-            maxBorrow: this.maxBorrow,
-            activeRentals: this.activeRentals,
-            countryCode: this.countryCode,
-            phoneNumber: this.phoneNumber,
-            dateOfBirth: this.dateOfBirth,
-            membershipExpiry: this.membershipExpiry,
-        },
-        config.get("JWTPrivateKey")
-        // ,{ expiresIn: "24h" }
+dbSchema.method("generateAuthToken", function () {
+    const token = jwt.sign({
+        _id: this._id,
+        name: this.name,
+        email: this.email,
+        isAdmin: this.isAdmin,
+        maxBorrow: this.maxBorrow,
+        activeRentals: this.activeRentals,
+        countryCode: this.countryCode,
+        phoneNumber: this.phoneNumber,
+        dateOfBirth: this.dateOfBirth,
+        membershipExpiry: this.membershipExpiry,
+    }, config.get("JWTPrivateKey")
+    // ,{ expiresIn: "24h" }
     );
     return token;
 });
-
-export const User = model<IUser>("user", dbSchema);
-
+export const User = model("user", dbSchema);
 // const Phone = model(
 //     "phone",
 //     new Schema({

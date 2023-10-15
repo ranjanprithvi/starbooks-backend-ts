@@ -6,32 +6,37 @@ import { Author } from "../models/authorModel.js";
 import validateObjectId from "../middleware/validateObjectId.js";
 import { validateBody } from "../middleware/validate.js";
 import { Book } from "../models/bookModel.js";
+import { Request, Response, NextFunction } from "express";
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
     const authors = await Author.find().sort("name");
     res.send(authors);
 });
 
-router.get("/:id", validateObjectId, async (req, res) => {
+router.get("/:id", validateObjectId, async (req: Request, res: Response) => {
     const author = await Author.findById(req.params.id);
     if (!author) return res.status(404).send("Resource not found");
     res.send(author);
 });
 
-router.post("/", [auth, validateBody(authorSchemaObject)], async (req, res) => {
-    let author = await Author.findOne({ name: req.body.name });
-    if (author) return res.status(400).send("Author already exists");
+router.post(
+    "/",
+    [auth, validateBody(authorSchemaObject)],
+    async (req: Request, res: Response) => {
+        let author = await Author.findOne({ name: req.body.name });
+        if (author) return res.status(400).send("Author already exists");
 
-    author = new Author({ name: req.body.name });
-    await author.save();
-    res.status(201).send(author);
-});
+        author = new Author({ name: req.body.name });
+        await author.save();
+        res.status(201).send(author);
+    }
+);
 
 router.put(
     "/:id",
     [validateObjectId, auth, validateBody(authorSchemaObject)],
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         let author = await Author.findOne({ name: req.body.name });
         if (author) res.status(400).send("Author already exists");
 
@@ -45,16 +50,20 @@ router.put(
     }
 );
 
-router.delete("/:id", [validateObjectId, auth, admin], async (req, res) => {
-    const books = await Book.find({ author: req.params.id });
-    if (books.length > 0)
-        return res
-            .status(400)
-            .send("Cannot delete author with books associated with it");
+router.delete(
+    "/:id",
+    [validateObjectId, auth, admin],
+    async (req: Request, res: Response) => {
+        const books = await Book.find({ author: req.params.id });
+        if (books.length > 0)
+            return res
+                .status(400)
+                .send("Cannot delete author with books associated with it");
 
-    const author = await Author.findByIdAndRemove(req.params.id);
-    if (!author) return res.status(404).send("Resource not found");
-    res.send(author);
-});
+        const author = await Author.findByIdAndRemove(req.params.id);
+        if (!author) return res.status(404).send("Resource not found");
+        res.send(author);
+    }
+);
 
 export default router;

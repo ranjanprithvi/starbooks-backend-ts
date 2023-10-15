@@ -3,18 +3,17 @@ import express from "express";
 import { Book } from "../models/bookModel.js";
 import { User } from "../models/userModel.js";
 import { conn } from "../startup/mongo.js";
-import { rentalSchema, rentalSchemaObject } from "../models/rentalModel.js";
+import { rentalSchemaObject } from "../models/rentalModel.js";
 import { admin } from "../middleware/admin.js";
 import { Rental } from "../models/rentalModel.js";
 import _ from "lodash";
-import Joi from "joi";
 import validateObjectId from "../middleware/validateObjectId.js";
-import moment from "moment";
-import { validateBody, validateEachParameter } from "../middleware/validate.js";
+import { validateBody } from "../middleware/validate.js";
+import { Request, Response } from "express";
 
 const router = express.Router();
 
-router.get("/", [auth, admin], async (req, res) => {
+router.get("/", [auth, admin], async (req: Request, res: Response) => {
     res.send(await Rental.find().populate(["book", "user"]).sort("-_id"));
 
     // const user = await User.findById(req.user._id)
@@ -31,27 +30,31 @@ router.get("/", [auth, admin], async (req, res) => {
     // res.send(user.activeRentals);
 });
 
-router.get("/:id", [validateObjectId, auth, admin], async (req, res) => {
-    const rental = await Rental.findById(req.params.id).populate([
-        "book",
-        "user",
-    ]);
-    if (!rental) return res.status(404).send("Resource not found");
+router.get(
+    "/:id",
+    [validateObjectId, auth, admin],
+    async (req: Request, res: Response) => {
+        const rental = await Rental.findById(req.params.id).populate([
+            "book",
+            "user",
+        ]);
+        if (!rental) return res.status(404).send("Resource not found");
 
-    res.send(rental);
-});
+        res.send(rental);
+    }
+);
 
 router.post(
     "/",
     [auth, admin, validateBody(rentalSchemaObject)],
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         const user = await User.findById(req.body.user);
         if (!user) return res.status(400).send("Invalid User.");
 
         if (user.isAdmin)
             return res.status(400).send("Admin cannot rent books you weirdo.");
 
-        if (Date.now() > user.membershipExpiry)
+        if (user.membershipExpiry && new Date() > user.membershipExpiry)
             return res.status(400).send("User membership has expired");
 
         if (user.activeRentals.length >= user.maxBorrow)
@@ -99,7 +102,7 @@ router.post(
     }
 );
 
-// router.put("/:id", auth, async (req, res) => {
+// router.put("/:id", auth, async (req:Request, res:Response) => {
 //     const { error } = rentalSchemaObject.validate();
 //     if (error) {
 //         return res.status(400).send(`Errors in fields...
@@ -133,7 +136,7 @@ router.post(
 router.patch(
     "/return/:id",
     [validateObjectId, auth, admin],
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         const rentalInDb = await Rental.findById(req.params.id);
         if (!rentalInDb) return res.status(404).send("Resource not found");
 
@@ -188,19 +191,23 @@ router.patch(
     }
 );
 
-router.delete("/:id", [validateObjectId, auth, admin], async (req, res) => {
-    const rental = await Rental.findById(req.params.id).populate([
-        "book",
-        "user",
-    ]);
+router.delete(
+    "/:id",
+    [validateObjectId, auth, admin],
+    async (req: Request, res: Response) => {
+        const rental = await Rental.findById(req.params.id).populate([
+            "book",
+            "user",
+        ]);
 
-    if (!rental) return res.status(404).send("Resource not found");
-    if (!rental.dateReturned)
-        return res.status(400).send("Rental is still active");
+        if (!rental) return res.status(404).send("Resource not found");
+        if (!rental.dateReturned)
+            return res.status(400).send("Rental is still active");
 
-    await rental.remove();
+        await rental.remove();
 
-    res.send(rental);
-});
+        res.send(rental);
+    }
+);
 
 export default router;

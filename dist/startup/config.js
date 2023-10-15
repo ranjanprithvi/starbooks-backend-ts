@@ -1,18 +1,12 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = __importDefault(require("config"));
-function checkConfigVariables() {
-    if (!config_1.default.get("JWTPrivateKey")) {
+import config from "config";
+export default function checkConfigVariables() {
+    if (!config.get("JWTPrivateKey")) {
         throw new Error("FATAL ERROR.. Private Key is not set");
     }
-    if (!config_1.default.get("MongodbURI")) {
+    if (!config.get("MongodbURI")) {
         throw new Error("FATAL ERROR.. MongoDB password is not set");
     }
 }
-exports.default = checkConfigVariables;
 // console.log("app name:" + config.get("name"));
 // console.log("mail server:" + config.get("mail.host"));
 // console.log("mail password:" + config.get("mail.password")); //The name of the variable of password

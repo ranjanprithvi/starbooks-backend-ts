@@ -5,12 +5,13 @@ import { Author } from "../models/authorModel.js";
 import { Genre } from "../models/genreModel.js";
 import { admin } from "../middleware/admin.js";
 import { Book } from "../models/bookModel.js";
-import Joi from "joi";
 import validateObjectId from "../middleware/validateObjectId.js";
 import { validateBody, validateEachParameter } from "../middleware/validate.js";
+import { Request, Response } from "express";
+
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
     // console.log(req.query);
     if (req.query.search) {
         req.query.title = { $regex: req.query.search, $options: "i" };
@@ -20,7 +21,7 @@ router.get("/", async (req, res) => {
     let sortBy = "-_id";
 
     if (req.query.sortBy) {
-        sortBy = req.query.sortBy;
+        sortBy = req.query.sortBy.toString();
     }
     delete req.query.sortBy;
 
@@ -37,7 +38,7 @@ router.get("/", async (req, res) => {
     res.send(books);
 });
 
-router.get("/:id", validateObjectId, async (req, res) => {
+router.get("/:id", validateObjectId, async (req: Request, res: Response) => {
     const book = await Book.findById(req.params.id).populate(
         // req.query.populate ? req.query.populate.split("|") : []
         ["genre", "author"]
@@ -49,7 +50,7 @@ router.get("/:id", validateObjectId, async (req, res) => {
 router.post(
     "/",
     [auth, admin, validateBody(bookSchemaObject)],
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         const genre = await Genre.findById(req.body.genre);
         if (!genre) return res.status(400).send("Invalid Genre!");
         const author = await Author.findById(req.body.author);
@@ -63,7 +64,7 @@ router.post(
 // router.put(
 //     "/:id",
 //     [validateObjectId, auth, admin, validateBody(bookSchemaObject)],
-//     async (req, res) => {
+//     async (req:Request, res:Response) => {
 //         const genre = await Genre.findById(req.body.genre);
 //         if (!genre) return res.status(404).send("Invalid Genre!");
 //         const author = await Author.findById(req.body.author);
@@ -75,17 +76,21 @@ router.post(
 //     }
 // );
 
-router.delete("/:id", [validateObjectId, auth, admin], async (req, res) => {
-    const book = await Book.findByIdAndDelete(req.params.id);
-    if (!book) return res.status(404).send("Resource not found");
+router.delete(
+    "/:id",
+    [validateObjectId, auth, admin],
+    async (req: Request, res: Response) => {
+        const book = await Book.findByIdAndDelete(req.params.id);
+        if (!book) return res.status(404).send("Resource not found");
 
-    res.send(book);
-});
+        res.send(book);
+    }
+);
 
 router.patch(
     "/:id",
     [validateObjectId, auth, admin, validateEachParameter(bookSchema)],
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         if (req.body.genre) {
             const genre = await Genre.findById(req.body.genre);
             if (!genre) return res.status(400).send("Invalid Genre!");
