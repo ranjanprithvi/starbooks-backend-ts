@@ -1,10 +1,10 @@
-import express from "express";
+import express, { Router } from "express";
 import bcrypt from "bcrypt";
 import { User } from "../models/userModel.js";
 import { authSchemaObject } from "../models/authModel.js";
 import { validateBody } from "../middleware/validate.js";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.post("/login", validateBody(authSchemaObject), async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
