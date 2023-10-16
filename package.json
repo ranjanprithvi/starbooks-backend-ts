@@ -10,7 +10,7 @@
         "start": "node dist/index.js",
         "preserve": "npm run build",
         "serve": "concurrently \"npx tsc -w\" \"nodemon dist/index.js\"",
-        "test": "jest --verbose --runInBand --detectOpenHandles --coverage"
+        "test": "NODE_ENV=test jest --verbose --runInBand --detectOpenHandles --coverage"
     },
     "keywords": [],
     "author": "",
@@ -50,7 +50,6 @@
         "babel-jest": "^29.3.1",
         "jest": "^29.3.1",
         "nodemon": "^3.0.1",
-        "rimraf": "^5.0.5",
         "supertest": "^6.3.1",
         "typescript": "^5.2.2"
     },

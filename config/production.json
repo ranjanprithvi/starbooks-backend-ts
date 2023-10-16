@@ -1,7 +1,7 @@
 {
-  "name": "starbooks-backend-prod",
-  "mail": {
-    "host": "prod-mail-server"
-  }
-  
+    "name": "starbooks-backend-prod",
+    "mail": {
+        "host": "prod-mail-server"
+    },
+    "Mongodb_name": "starbooksDB"
 }
