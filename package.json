@@ -6,7 +6,6 @@
     "types": "types/index.d.ts",
     "scripts": {
         "build": "rimraf dist && npx tsc",
-        "prestart": "npm run build",
         "start": "node dist/index.js",
         "preserve": "npm run build",
         "serve": "concurrently \"npx tsc -w\" \"nodemon dist/index.js\"",
@@ -33,6 +32,7 @@
         "morgan": "^1.10.0",
         "pug": "^3.0.2",
         "query-string": "^7.1.1",
+        "rimraf": "^5.0.5",
         "winston": "^3.8.2",
         "winston-mongodb": "^5.1.0"
     },
