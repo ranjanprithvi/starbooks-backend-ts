@@ -19,7 +19,10 @@ export const userSchema = {
         .regex(/(?=^.{5,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/)
         .required(),
     isAdmin: Joi.boolean(),
-    countryCode: Joi.string().max(3).regex(/^\d+$/).allow(""),
+    countryCode: Joi.string()
+        .max(8)
+        .regex(/\+[\d-]{1,7}/)
+        .allow(""),
     phoneNumber: Joi.string().max(11).regex(/^\d+$/).allow(""),
     dateOfBirth: Joi.date().max(new Date()),
     membershipExpiry: Joi.date().required(),
@@ -38,7 +41,7 @@ const dbSchema = new Schema({
     password: { type: String, required: true, select: false },
     name: { type: String, minLength: 3, maxLength: 50, required: true },
     isAdmin: { type: Boolean, default: false },
-    countryCode: { type: String, maxLength: 3, default: "49" },
+    countryCode: { type: String, maxLength: 8, default: "+49" },
     phoneNumber: {
         type: String,
         maxLength: 11,

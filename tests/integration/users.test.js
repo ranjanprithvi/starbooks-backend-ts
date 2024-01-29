@@ -79,7 +79,7 @@ describe("/api/users", () => {
                 name: "user1",
                 email: "abc@abc.com",
                 password: "12345",
-                countryCode: "49",
+                countryCode: "+1234-56",
                 phoneNumber: "12345678901",
                 membershipExpiry: moment().add(30, "days").toDate(),
                 dateOfBirth: moment().subtract(20, "years").toDate(),
@@ -154,7 +154,7 @@ describe("/api/users", () => {
                 name: "user1",
                 email: "abc@abc.com",
                 password: "12345",
-                countryCode: "49",
+                countryCode: "+1234-56",
                 phoneNumber: "12345678901",
                 membershipExpiry: moment().add(30, "days").toDate(),
                 dateOfBirth: moment().subtract(20, "years").toDate(),
@@ -238,7 +238,7 @@ describe("/api/users", () => {
                 email: "abc@abc.com",
                 dateOfBirth: moment().subtract(20, "years").toDate(),
                 membershipExpiry: moment().add(30, "days"),
-                countryCode: "49",
+                countryCode: "+1234-56",
                 phoneNumber: "12345678901",
                 maxBorrow: 3,
             };
@@ -377,8 +377,8 @@ describe("/api/users", () => {
             expect(response.status).toBe(400);
         });
 
-        it("should return 400 if country code is more than 3 characters", async () => {
-            params.countryCode = "1234";
+        it("should return 400 if country code is more than 8 characters", async () => {
+            params.countryCode = "+1234-567";
             const response = await exec();
 
             expect(response.status).toBe(400);
@@ -498,7 +498,7 @@ describe("/api/users", () => {
                 password: password,
                 dateOfBirth: moment().subtract(20, "years").toDate(),
                 membershipExpiry: moment().add(30, "days"),
-                countryCode: "49",
+                countryCode: "+1234-56",
                 phoneNumber: "12345678901",
                 maxBorrow: 3,
             });
@@ -510,7 +510,7 @@ describe("/api/users", () => {
                 name: "user2",
                 dateOfBirth: moment().subtract(18, "years"),
                 membershipExpiry: moment().add(60, "days"),
-                countryCode: "44",
+                countryCode: "+1234-67",
                 phoneNumber: "12345678902",
                 maxBorrow: 4,
             };
@@ -555,8 +555,8 @@ describe("/api/users", () => {
             expect(response.status).toBe(400);
         });
 
-        it("should return 400 if country code is more than 3 characters", async () => {
-            params.countryCode = "1234";
+        it("should return 400 if country code is more than 8 characters", async () => {
+            params.countryCode = "+1234-567";
             const response = await exec();
 
             expect(response.status).toBe(400);
@@ -671,7 +671,7 @@ describe("/api/users", () => {
                 email: "abc@abc.com",
                 password: password,
                 membershipExpiry: moment().add(30, "days"),
-                countryCode: "49",
+                countryCode: "+1234-56",
                 phoneNumber: "12345678901",
                 maxBorrow: 3,
             });
