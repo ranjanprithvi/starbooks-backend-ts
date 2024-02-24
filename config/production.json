@@ -3,5 +3,5 @@
     "mail": {
         "host": "prod-mail-server"
     },
-    "Mongodb_name": "starbooksDB"
+    "db_name": "starbooksDB"
 }

@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
 import config from "config";
 import { logger } from "./logger.js";
-import { log } from "console";
-let connectionString;
-connectionString =
-    config.get("MongodbURI") + config.get("Mongodb_name");
-log(connectionString);
+
+const connectionString =
+    connectionString(
+        config.has("MongodbURI")
+            ? config.get("MongodbURI")
+            : config.get("localDB")
+    ) + config.get("db_name");
+
 export default function initialiseDb() {
     mongoose.set("strictQuery", false);
     mongoose

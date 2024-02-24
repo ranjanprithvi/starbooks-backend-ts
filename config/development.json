@@ -1,6 +1,7 @@
 {
-  "name": "starbooks-backend-dev",
-  "mail": {
-    "host": "dev-mail-server"
-  }
+    "name": "starbooks-backend-dev",
+    "mail": {
+        "host": "dev-mail-server"
+    },
+    "db_name": "starbooksDB"
 }

@@ -6,7 +6,7 @@ import { log } from "console";
 let connectionString: string;
 
 connectionString =
-    config.get<string>("MongodbURI") + config.get<string>("Mongodb_name");
+    config.get<string>("MongodbURI") + config.get<string>("db_name");
 
 log(connectionString);
 
