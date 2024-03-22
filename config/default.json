@@ -3,5 +3,6 @@
     "JWTPrivateKey": "",
     "localDB": "mongodb://127.0.0.1:27017/",
     "db_name": "starbooksDB",
-    "authEnabled": true
+    "authEnabled": true,
+    "port": 4002
 }

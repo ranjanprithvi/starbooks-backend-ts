@@ -10,7 +10,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { logger } from "./logger.js";
 import cors from "cors";
-import { Express } from "express";
+import { Express, Request, Response } from "express";
 
 export default function initialiseRoutes(app: Express) {
     app.use(cors());
@@ -22,11 +22,14 @@ export default function initialiseRoutes(app: Express) {
     logger.info("Morgan enabled");
     app.use(morgan("tiny"));
 
-    app.use("/api/books", books);
-    app.use("/api/genres", genres);
-    app.use("/api/authors", authors);
-    app.use("/api/rentals", rentals);
-    app.use("/api/users", users);
-    app.use("/api/auth", auth);
+    app.use("/starbooks/api/books", books);
+    app.use("/starbooks/api/genres", genres);
+    app.use("/starbooks/api/authors", authors);
+    app.use("/starbooks/api/rentals", rentals);
+    app.use("/starbooks/api/users", users);
+    app.use("/starbooks/api/auth", auth);
+    app.use("/", (req: Request, res: Response) => {
+        res.send("Starbooks backend is running!");
+    });
     app.use(error);
 }
